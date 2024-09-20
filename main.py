@@ -59,12 +59,12 @@ def check_containers(containers):
         for env in container_env:
             if 'RESTART' in env:
                 restart_container = env.split('=')[1]
-                if 'RESTART_INTERVAL' in env:
-                    restart_interval = datetime.strptime(env.split('=')[1], "%H:%M:%S")
-                logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
-
+            if 'RESTART_INTERVAL' in env:
+                restart_interval = datetime.strptime(env.split('=')[1], "%H:%M:%S")
+        
         # Check if the container should be restarted, and maintain the array of watched containers
         if restart_container == True:
+            logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
             if container_name not in container_array:
                 container_array.append({'name': container_name, 'last_restart': datetime.now()})
             else:
