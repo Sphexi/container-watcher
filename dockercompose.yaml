@@ -1,0 +1,6 @@
+version: '1'
+
+services:
+  container-watcher:
+    image: ghcr.io/sphexi/container-watcher:main
+    restart: unless-stopped
