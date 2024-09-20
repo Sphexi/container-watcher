@@ -4,3 +4,5 @@ services:
   container-watcher:
     image: ghcr.io/sphexi/container-watcher:main
     restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

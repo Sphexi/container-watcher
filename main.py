@@ -8,15 +8,15 @@
 # It's meant to be a CRON job of sorts for rebooting Docker containers in situations
 # where the containers are running some sort of service that doesn't do a health check
 # and would benefit from a regular restart.
-
+#
 # The env variables that you set on the other containers will determine the conditions 
 # for restarting those containers.
-
+#
 # The script will run every 60 seconds, so if you want to restart a container every
 # 5 hours, you would set the RESTART_INTERVAL variable to 05:00:00. The script will
 # then check the current time against the last restart time and restart the container
 # if the interval has been reached.
-# 
+#
 # To run the script, you would build it into a Docker container and run it with the
 # following command:
 # docker run -d --name container-watcher --restart=always -v /var/run/docker.sock:/var/run/docker.sock container-watcher
@@ -59,15 +59,12 @@ def check_containers(containers):
         for env in container_env:
             if 'RESTART_CONTAINER' in env:
                 restart_container = env.split('=')[1]
-                logger.info(f'Container: {container_name}, Restart: {restart_container}')
             if 'RESTART_INTERVAL' in env:
                 restart_interval = datetime.strptime(env.split('=')[1], "%H:%M:%S")
-                logger.info(f'Container: {container_name}, Restart Interval: {restart_interval}')
         
         # Check if the container should be restarted, and maintain the array of watched containers
         if restart_container:
             logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
-            # Search all dicts inside of the container_array list for the container name
             if not any(container['name'] == container_name for container in container_array):
                 container_array.append({'name': container_name, 'last_restart': datetime.now()})
             else:
@@ -87,11 +84,13 @@ def check_containers(containers):
 # Main loop
 def main():
     while True:
+        logger.info(f'**********************************')
         logger.info('Checking for containers that need to be restarted...')
         containers = get_running_containers()
         logger.info('Containers to check...')
         logger.info(containers)
         check_containers(containers)
+        logger.info(f'**********************************')
         logger.info('List of tracked containers:')
         logger.info(container_array)
         logger.info('Sleeping for 60 seconds...')
