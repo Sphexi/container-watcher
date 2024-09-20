@@ -64,7 +64,7 @@ def check_containers(containers):
         
         # Check if the container should be restarted, and maintain the array of watched containers
         if restart_container:
-            logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
+            logger.info(f'{datetime.now()}: Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
             if not any(container['name'] == container_name for container in container_array):
                 container_array.append({'name': container_name, 'last_restart': datetime.now()})
             else:
@@ -74,26 +74,26 @@ def check_containers(containers):
                         now = datetime.now()
                         interval = datetime.strptime(str(now - last_restart), "%H:%M:%S.%f")
                         if interval > restart_interval:
-                            logger.info(f'Restarting container: {container_name}')
+                            logger.info(f'{datetime.now()}: Restarting container: {container_name}')
                             docker_container.restart()
                             container['last_restart'] = datetime.now()
-                            logger.info(f'Container: {container_name} has been restarted')
+                            logger.info(f'{datetime.now()}: Container: {container_name} has been restarted')
                         else:
-                            logger.info(f'Container: {container_name} has not reached the restart interval yet. Exiting...')
+                            logger.info(f'{datetime.now()}: Container: {container_name} has not reached the restart interval yet. Exiting...')
 
 # Main loop
 def main():
     while True:
         logger.info(f'**********************************')
-        logger.info('Checking for containers that need to be restarted...')
+        logger.info(f'{datetime.now()}: Checking for containers that need to be restarted...')
         containers = get_running_containers()
-        logger.info('Containers to check...')
+        logger.info(f'{datetime.now()}: Containers to check...')
         logger.info(containers)
         check_containers(containers)
         logger.info(f'**********************************')
-        logger.info('List of tracked containers:')
+        logger.info(f'{datetime.now()}: List of tracked containers:')
         logger.info(container_array)
-        logger.info('Sleeping for 60 seconds...')
+        logger.info(f'{datetime.now()}: Sleeping for 60 seconds...')
         time.sleep(60)
 
 if __name__ == '__main__':
