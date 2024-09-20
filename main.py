@@ -57,7 +57,7 @@ def check_containers(containers):
         container_name = docker_container.name
         container_env = docker_container.attrs['Config']['Env']
         for env in container_env:
-            if 'RESTART' in env:
+            if 'RESTART_CONTAINER' in env:
                 restart_container = env.split('=')[1]
                 logger.info(f'Container: {container_name}, Restart: {restart_container}')
             if 'RESTART_INTERVAL' in env:
@@ -88,6 +88,8 @@ def main():
     while True:
         logger.info('Checking for containers that need to be restarted...')
         containers = get_running_containers()
+        logger.info('Containers to check...')
+        logger.info(containers)
         check_containers(containers)
         logger.info('List of tracked containers:')
         logger.info(container_array)
