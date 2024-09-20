@@ -37,6 +37,8 @@ logger = logging.getLogger(__name__)
 
 # Create the array to store the container names and the last time they were restarted
 container_array = []
+restart_container = False
+restart_interval = None
 
 # Get the Docker client
 client = docker.from_env()
@@ -49,17 +51,20 @@ def get_running_containers():
 # Loop through the list of containers and look at the env variables
 def check_containers(containers):
     for docker_container in containers:
+        restart_container = False
+        restart_interval = None
+        
         container_name = docker_container.name
         container_env = docker_container.attrs['Config']['Env']
         for env in container_env:
             if 'RESTART' in env:
-                restart = env.split('=')[1]
+                restart_container = env.split('=')[1]
                 if 'RESTART_INTERVAL' in env:
                     restart_interval = datetime.strptime(env.split('=')[1], "%H:%M:%S")
                 logger.info(f'Container: {container_name}, Restart: {restart}, Restart Interval: {restart_interval}')
 
         # Check if the container should be restarted, and maintain the array of watched containers
-        if restart == True:
+        if restart_container == True:
             if container_name not in container_array:
                 container_array.append({'name': container_name, 'last_restart': datetime.now()})
             else:
