@@ -67,7 +67,8 @@ def check_containers(containers):
         # Check if the container should be restarted, and maintain the array of watched containers
         if restart_container:
             logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
-            if container_name not in container_array:
+            container_names = container_array.values()
+            if container_name not in container_names:
                 container_array.append({'name': container_name, 'last_restart': datetime.now()})
             else:
                 for container in container_array:
