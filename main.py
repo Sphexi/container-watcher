@@ -53,7 +53,7 @@ def check_containers(containers):
     for docker_container in containers:
         restart_container = False
         restart_interval = None
-        
+
         container_name = docker_container.name
         container_env = docker_container.attrs['Config']['Env']
         for env in container_env:
@@ -61,7 +61,7 @@ def check_containers(containers):
                 restart_container = env.split('=')[1]
                 if 'RESTART_INTERVAL' in env:
                     restart_interval = datetime.strptime(env.split('=')[1], "%H:%M:%S")
-                logger.info(f'Container: {container_name}, Restart: {restart}, Restart Interval: {restart_interval}')
+                logger.info(f'Container: {container_name}, Restart: {restart_container}, Restart Interval: {restart_interval}')
 
         # Check if the container should be restarted, and maintain the array of watched containers
         if restart_container == True:
@@ -84,8 +84,12 @@ def check_containers(containers):
 # Main loop
 def main():
     while True:
+        logger.info('Checking for containers that need to be restarted...')
         containers = get_running_containers()
         check_containers(containers)
+        logger.info('List of tracked containers:')
+        logger.info(container_array)
+        logger.info('Sleeping for 60 seconds...')
         time.sleep(60)
 
 if __name__ == '__main__':
