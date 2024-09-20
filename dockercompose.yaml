@@ -2,6 +2,7 @@ version: '1'
 
 services:
   container-watcher:
+    container_name: container-watcher
     image: ghcr.io/sphexi/container-watcher:main
     restart: unless-stopped
     volumes:
