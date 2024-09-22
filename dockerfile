@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM python:3.11 AS build
+FROM --platform=$TARGETPLATFORM python:3.11 AS build
 
 WORKDIR /app
 
