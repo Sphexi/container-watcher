@@ -40,8 +40,25 @@ container_array = []
 restart_container = False
 restart_interval = None
 
+# Set the time to wait between checks in seconds
+timeToWait = 60
+
+# Set current date only
+currentDate = '1900-01-01'
+
 # Get the Docker client
 client = docker.from_env()
+
+# Check to see if the current date is greater than the currentDate
+def checkDate():
+    if datetime.now().date() > currentDate:
+        return True
+    else:
+        return False
+    
+# Set the current date
+def setCurrentDate():
+    currentDate = datetime.now().date()
 
 # Get a list of running containers from the Docker daemon
 def get_running_containers():
@@ -91,10 +108,16 @@ def main():
         logger.info(containers)
         check_containers(containers)
         logger.info(f'**********************************')
+        logger.info(f'Checking to see if the date has changed...')
+        if checkDate():
+            logger.info(f'The date has changed. Resetting the tracked containers...')
+            setCurrentDate()
+            container_array = []
+            break
         logger.info(f'{datetime.now()}: List of tracked containers:')
         logger.info(container_array)
-        logger.info(f'{datetime.now()}: Sleeping for 60 seconds...')
-        time.sleep(60)
+        logger.info(f'{datetime.now()}: Sleeping for {timeToWait} seconds...')
+        time.sleep(timeToWait)
 
 if __name__ == '__main__':
     main()
