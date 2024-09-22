@@ -44,7 +44,7 @@ restart_interval = None
 timeToWait = 60
 
 # Set current date only
-currentDate = '1900-01-01'
+currentDate = datetime.now().date()
 
 # Get the Docker client
 client = docker.from_env()
