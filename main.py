@@ -58,6 +58,7 @@ def checkDate():
     
 # Set the current date
 def setCurrentDate():
+    global currentDate
     currentDate = datetime.now().date()
 
 # Get a list of running containers from the Docker daemon
@@ -112,6 +113,7 @@ def main():
         if checkDate():
             logger.info(f'The date has changed. Resetting the tracked containers...')
             setCurrentDate()
+            global container_array
             container_array = []
             break
         logger.info(f'{datetime.now()}: List of tracked containers:')
