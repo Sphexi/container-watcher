@@ -5,6 +5,7 @@
 # - The container name
 # - If it should be restarted or not
 # - How often in-between restarts (ie 05:00:00 for 5 hours, 00:30:00 for 30 minutes, etc) 
+#
 # It's meant to be a CRON job of sorts for rebooting Docker containers in situations
 # where the containers are running some sort of service that doesn't do a health check
 # and would benefit from a regular restart.
@@ -12,14 +13,15 @@
 # The env variables that you set on the other containers will determine the conditions 
 # for restarting those containers.
 #
-# The script will run every 60 seconds, so if you want to restart a container every
+# The script will run every 60 seconds, and if you want to restart a container every
 # 5 hours, you would set the RESTART_INTERVAL variable to 05:00:00. The script will
 # then check the current time against the last restart time and restart the container
-# if the interval has been reached.
+# if the interval has been reached.  You can set a maximum of 24:00:00 for the interval.
 #
 # To run the script, you would build it into a Docker container and run it with the
 # following command:
-# docker run -d --name container-watcher --restart=always -v /var/run/docker.sock:/var/run/docker.sock container-watcher
+#
+# docker run -d --name container-watcher --restart=always -v /var/run/docker.sock:/var/run/docker.sock container-watcher ghcr.io/sphexi/container-watcher:main
 # 
 # The script will then run inside of the container and watch the Docker
 # daemon for containers that need to be restarted. If a container needs to be restarted,
