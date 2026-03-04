@@ -1,9 +1,16 @@
-version: '1'
-
 services:
   container-watcher:
     container_name: container-watcher
     image: ghcr.io/sphexi/container-watcher:main
     restart: unless-stopped
+    # environment:
+    #   LOG_LEVEL: DEBUG
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  # Example: a service managed by container-watcher
+  # my-service:
+  #   image: my-image
+  #   labels:
+  #     watcher.autorestart: "true"
+  #     watcher.autorestart.interval: "6h"
