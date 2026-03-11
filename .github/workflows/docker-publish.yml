@@ -60,12 +60,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      # Delete all but the 3 most recent package versions from GHCR
-      - name: Prune old package versions
-        if: github.event_name != 'pull_request'
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: ${{ github.event.repository.name }}
-          package-type: container
-          min-versions-to-keep: 3
-          token: ${{ secrets.GITHUB_TOKEN }}
+      
